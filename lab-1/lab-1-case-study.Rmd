@@ -253,9 +253,9 @@ You don't need to read the entire article yet, but please open this
 article, scan the sections, and write down two things you notice or
 wonder about the dataset.
 
-1.  
+1.  What is vle? Virtual Learning Environment
 
-2.  
+2.   Significantly more males to females
 
 #### Read CSV Data File
 
@@ -292,16 +292,16 @@ using the `glimpse()` function). Do this in the code chunk below! Note
 its dimensions --- especially how many rows it has!
 
 ```{r}
-
+glimpse(students)
 ```
 
 Write down a few observations after inspecting the data:
 
--   
+-   Completely messy
 
--   
+-   Columns are listed horizontally
 
--   
+-   Both text and numeric present
 
 ### 2b. "Mutate" Variables
 
@@ -352,16 +352,16 @@ In the chunk below, use the `view()` function to manually check and see
 if our new variable has indeed been added to our data frame.
 
 ```{r, eval=FALSE}
-
+view(students)
 ```
 
 Write down a few observations after inspecting the data:
 
--   
+-   date_registration is not in date format but a whole number
 
--   
+-   final_results = Distinction does not equal a pass
 
--   
+-   code_presentation is identical for all rows
 
 **Note**: The [`mutate()`
 function](https://dplyr.tidyverse.org/reference/mutate.html#:~:text=mutate()%20creates%20new%20columns,setting%20their%20value%20to%20NULL%20).)
@@ -378,7 +378,8 @@ variable. This will be an *independent variable*, or a predictor
 variable.
 
 ```{r}
-
+students <- students %>% 
+    mutate(disability = as.factor(disability))
 ```
 
 ## 3. EXPLORE
@@ -455,7 +456,7 @@ variable.
 
 ```{r}
 students <- students %>% 
-    mutate(_ = factor(_, levels = c("0-10%",
+    mutate(imd_band = factor(imd_band, levels = c("0-10%",
                                                   "10-20%",
                                                   "20-30%",
                                                   "30-40%",
@@ -465,7 +466,7 @@ students <- students %>%
                                                   "70-80%",
                                                   "80-90%",
                                                   "90-100%"))) %>% # this creates a factor with ordered levels
-    mutate(_ = as.integer(_)) # this changes the levels into integers based on the order of the factor levels
+   mutate(imd_band = as.integer(imd_band))  # this changes the levels into integers based on the order of the factor levels
 
 students
 ```
@@ -554,6 +555,8 @@ created a training and testing data set called `training()` and
 Run the following code to split the data:
 
 ```{r}
+library(tidymodels)
+
 set.seed(20230712)
 
 train_test_split <- initial_split(students, prop = .80)
@@ -577,7 +580,8 @@ observations as in the larger data. Do that in the chunk below:
 
 ```{r}
 
-
+data_train
+data_test
 ```
 
 ### Step 2: Create a "Recipe"
@@ -719,7 +723,7 @@ Importantly, here, we can look at the model. Type `fitted_model` in a
 code chunk to take a look.
 
 ```{r}
-
+fitted_model
 ```
 
 Note that while we don't typically interpret the coefficients for a
@@ -734,6 +738,8 @@ coefficients:
 
 -   disability has a negative relationship with pass and imd_band has a
     positive relationship with pass.
+-   According to the data, students with a disability pass at lower
+    frequencies.
 
 #### The last_fit function
 
@@ -745,14 +751,14 @@ its accuracy using the *testing data set* (which is not used to train
 the model).
 
 ```{r}
-
+final_fit <- last_fit(my_mod, my_rec, split = train_test_split)
 ```
 
 Type `final_fit` below; this is the final, fitted model---one that can
 be interpreted further in the next step!
 
 ```{r}
-
+final_fit
 ```
 
 You may see a message/warning above or when you examine `final_fit`; you
@@ -798,6 +804,7 @@ That's helpful, but there's one more step we can take -- counting up the
 values of `correct`:
 
 ```{r}
+library(janitor)
 final_fit %>% 
     collect_predictions() %>% # see test set predictions
     select(.pred_class, pass) %>% # just to make the output easier to view 
@@ -811,13 +818,15 @@ Let's interpret the above. If the value of `correct` is `TRUE` when the
 predicted and known code are the same, what does the `percent` column
 tell us? Add one or more notes to the dashes below:
 
--   YOUR RESPONSE HERE
+-   The percent column explains out of 6,519 data points what percent is
+    FALSE, TRUE, or NA. Those 3 percent values add up to 1.
 
 A short-cut to the above is below; **we'll use this short-cut from here
 forward**, having seen how accuracy is calculated.
 
 ```{r}
-
+students %>% 
+    count(pass)
 ```
 
 How accurate was our predictive model? Consider how well our model would
