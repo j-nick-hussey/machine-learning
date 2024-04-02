@@ -1,6 +1,6 @@
 ---
 title: 'Machine Learning - Lab 1 Independent Assignment'
-author: "[Enter your name]"
+author: "J. Nick Hussey"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output: html_document
 ---
@@ -95,7 +95,7 @@ data_test
 ##### 4.2 Recipe
 
 ```{r}
-my_rec <- recipe(pass ~ disability + imd_band + region, data = data_train)
+my_rec <- recipe(pass ~ disability + imd_band + date_registered, data = data_train)
 
 my_rec
 ```
@@ -181,15 +181,17 @@ Part C: Use the institutional library (e.g. [NU Library](https://vlc.ent.sirsi.n
 
 1.  Provide an APA citation for your selected study.
 
-    -   
+    -   Khor, E. T. (2019). PREDICTIVE MODELS WITH MACHINE LEARNING ALGORITHMS TO FORECAST STUDENTS’ PERFORMANCE. *INTED2019 Proceedings*, 2831–2837. <https://doi.org/10.21125/inted.2019.0757>
 
 2.  What research questions were the authors of this study trying to address and why did they consider these questions important?
 
-    -   
+    -   The researcher had three goals with this case study on educational performance. (1) To accurately predict the academic category a student would fall in between high-achiever, middle-achiever, and low-achiever with the use of machine learning. Can performance be predicted? (2) To test if the inclusion of learning behavioral variables, like number of times student raised questions or number of absences, affect the accuracy. Does behavior affect performance? (3) To compare the accuracy with the same variables across 4 models (decision tree, the naïve Bayes, the support vector machine, and the neural network). Which model(s) produce accurate results?
+
+        The author clearly identifies the potential outcome of early identification of achievement potential by stating “at-risk students can be identified as early as the beginning of the course and they can be provided in-time intervention” (Khor, 2019).
 
 3.  What were the results of these analyses?
 
-    -   
+    -   The paper produces fascinating results when it compares the performance of the 4 models. All 4 models revealed significantly higher results when incorporating learning behavior variables compared to not with an average increase of 18.28%. The support vector machine model produces the highest accuracy with 78.75% edging out the decision tree (78.33%) and neural network (75.83%) models. The Naïve Bayes underperformed at 67.71%, while the other 3 could reliably predict the achievement potential of 3 out of every 4 students.
 
 ### Knit and Publish
 
